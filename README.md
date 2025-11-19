@@ -1,7 +1,7 @@
 const StellarSDK = require("@stellar/stellar-sdk");
 
 const server = new StellarSDK.Horizon.Server("https://api.testnet.minepi.com");
-const NETWORK_PASSPHRASE = "Pi Testnet";
+const NETWORK_PASSPHRASE = "lyrics enact thrive risk dry soccer material universe tiger square weapon love review float garbage disease measure skull weapon surround oblige unable artefact grit";
 
 // prepare keypairs
 const issuerKeypair = StellarSDK.Keypair.fromSecret("GANRXB35VL4GIROIAFYEZMUNG45JT6BS7Z35LGDMY62X5ZJCEVSID5QJ"); // use actual secret key here
@@ -9,9 +9,9 @@ const distributorKeypair = StellarSDK.Keypair.fromSecret("GB3QIVLHFFUQONTJD262BA
 
 // define a token
 // token code should be alphanumeric and up to 12 characters, case sensitive
-const customToken = new StellarSDK.Asset("8coin", issuerKeypair.publicKey(GANRXB35VL4GIROIAFYEZMUNG45JT6BS7Z35LGDMY62X5ZJCEVSID5QJ));
+const customToken = new StellarSDK.Asset("8Coinn", issuerKeypair.publicKey());
 
-const distributorAccount = await server.loadAccount(distributorKeypair.publicKey(GB3QIVLHFFUQONTJD262BABTQUT23CATBPN3OVQ4UXCZ5ZOW7XI3QLJT));
+const distributorAccount = await server.loadAccount(distributorKeypair.publicKey());
 
 // look up base fee
 const response = await server.ledgers().order("desc").limit(1).call();
@@ -24,7 +24,7 @@ const trustlineTransaction = new StellarSDK.TransactionBuilder(distributorAccoun
   networkPassphrase: NETWORK_PASSPHRASE,
   timebounds: await server.fetchTimebounds(90),
 })
-  .addOperation(StellarSDK.Operation.changeTrust({ asset: 8coin, limit: undefined }))
+  .addOperation(StellarSDK.Operation.changeTrust({ asset: custom token, limit: undefined }))
   .build();
 
 trustlineTransaction.sign(distributorKeypair);
@@ -47,7 +47,7 @@ const paymentTransaction = new StellarSDK.TransactionBuilder(issuerAccount, {
     StellarSDK.Operation.payment({
       destination: distributorKeypair.publicKey(),
       asset: 8coin,
-      amount: "100000", // amount to mint
+      amount: "10000", // amount to mint
     })
   )
   .build();
