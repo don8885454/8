@@ -1,5 +1,6 @@
 # 8
 Tokenization
+
 const StellarSDK = require("@stellar/stellar-sdk");
 
 const server = new StellarSDK.Horizon.Server("https://api.testnet.minepi.com");
@@ -69,3 +70,33 @@ updatedDistributorAccount.balances.forEach((balance) => {
     console.log(`${balance.asset_code} Balance: ${balance.balance}`);
   }
 });
+
+"https://api.testnet.minepi.com/assets?asset_code=<YOUR_TOKEN_CODE>&asset_issuer=<YOUR_TOKEN_ISSUER>"
+...
+"_links": {
+  "toml": {
+    "href": "https://<number8>/.well-known/pi.toml"
+  }
+}
+...
+const issuerAccount = await server.loadAccount(issuerKeypair.publicKey());
+
+const setOptionsTransaction = new StellarSDK.TransactionBuilder(issuerAccount, {
+  fee: baseFee,
+  networkPassphrase: NETWORK_PASSPHRASE,
+  timebounds: await server.fetchTimebounds(90),
+})
+  .addOperation(StellarSDK.Operation.setOptions({ homeDomain: "example.com" })) // replace with your actual domain
+  .build();
+
+setOptionsTransaction.sign(issuerKeypair);
+
+await server.submitTransaction(setOptionsTransaction);
+console.log("Home Domain is set successfully.");
+
+[[CURRENCIES]]
+code="Undarcoin"
+issuer="GANRXB35VL4GIROIAFYEZMUNG45JT6BS7Z35LGDMY62X5ZJCEVSID5QJ"
+name="number 8"
+desc="This is a test token that is created as an example and has no value."
+image="https://share.google/LdZM6gaTczRyqNE6f"
