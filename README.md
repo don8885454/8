@@ -12,7 +12,7 @@ const distributorKeypair = StellarSDK.Keypair.fromSecret("GB3QIVLHFFUQONTJD262BA
 
 // define a token
 // token code should be alphanumeric and up to 12 characters, case sensitive
-const customToken = new StellarSDK.Asset("Undarcoin", issuerKeypair.publicKey(GANRXB35VL4GIROIAFYEZMUNG45JT6BS7Z35LGDMY62X5ZJCEVSID5QJ));
+const customToken = new StellarSDK.Asset("8coin", issuerKeypair.publicKey(GANRXB35VL4GIROIAFYEZMUNG45JT6BS7Z35LGDMY62X5ZJCEVSID5QJ));
 
 const distributorAccount = await server.loadAccount(distributorKeypair.publicKey(GB3QIVLHFFUQONTJD262BABTQUT23CATBPN3OVQ4UXCZ5ZOW7XI3QLJT));
 
@@ -27,7 +27,7 @@ const trustlineTransaction = new StellarSDK.TransactionBuilder(distributorAccoun
   networkPassphrase: NETWORK_PASSPHRASE,
   timebounds: await server.fetchTimebounds(90),
 })
-  .addOperation(StellarSDK.Operation.changeTrust({ asset: customToken, limit: undefined }))
+  .addOperation(StellarSDK.Operation.changeTrust({ asset: 8coin, limit: undefined }))
   .build();
 
 trustlineTransaction.sign(distributorKeypair);
@@ -49,7 +49,7 @@ const paymentTransaction = new StellarSDK.TransactionBuilder(issuerAccount, {
   .addOperation(
     StellarSDK.Operation.payment({
       destination: distributorKeypair.publicKey(),
-      asset: customToken,
+      asset: 8coin,
       amount: "100000", // amount to mint
     })
   )
@@ -71,7 +71,7 @@ updatedDistributorAccount.balances.forEach((balance) => {
   }
 });
 
-"https://api.testnet.minepi.com/assets?asset_code=<YOUR_TOKEN_CODE>&asset_issuer=<YOUR_TOKEN_ISSUER>"
+"https://api.testnet.minepi.com/assets?asset_code=<8coin>&asset_issuer=<8coin>"
 ...
 "_links": {
   "toml": {
@@ -79,14 +79,14 @@ updatedDistributorAccount.balances.forEach((balance) => {
   }
 }
 ...
-const issuerAccount = await server.loadAccount(issuerKeypair.publicKey());
+const issuerAccount = await server.loadAccount(issuerKeypair.publicKey(GB3QIVLHFFUQONTJD262BABTQUT23CATBPN3OVQ4UXCZ5ZOW7XI3QLJT));
 
 const setOptionsTransaction = new StellarSDK.TransactionBuilder(issuerAccount, {
   fee: baseFee,
   networkPassphrase: NETWORK_PASSPHRASE,
   timebounds: await server.fetchTimebounds(90),
 })
-  .addOperation(StellarSDK.Operation.setOptions({ homeDomain: "example.com" })) // replace with your actual domain
+  .addOperation(StellarSDK.Operation.setOptions({ homeDomain: "number8.com" })) // replace with your actual domain
   .build();
 
 setOptionsTransaction.sign(issuerKeypair);
@@ -95,7 +95,7 @@ await server.submitTransaction(setOptionsTransaction);
 console.log("Home Domain is set successfully.");
 
 [[CURRENCIES]]
-code="Undarcoin"
+code="8coin"
 issuer="GANRXB35VL4GIROIAFYEZMUNG45JT6BS7Z35LGDMY62X5ZJCEVSID5QJ"
 name="number 8"
 desc="This is a test token that is created as an example and has no value."
