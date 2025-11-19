@@ -1,6 +1,3 @@
-# 8
-Tokenization
-
 const StellarSDK = require("@stellar/stellar-sdk");
 
 const server = new StellarSDK.Horizon.Server("https://api.testnet.minepi.com");
@@ -39,7 +36,7 @@ console.log("Trustline created successfully");
 //====================================================================================
 // now mint TestToken by sending from issuer account to distributor account
 
-const issuerAccount = await server.loadAccount(issuerKeypair.publicKey());
+const issuerAccount = await server.loadAccount(issuerKeypair.publicKey(GANRXB35VL4GIROIAFYEZMUNG45JT6BS7Z35LGDMY62X5ZJCEVSID5QJ));
 
 const paymentTransaction = new StellarSDK.TransactionBuilder(issuerAccount, {
   fee: baseFee,
@@ -74,7 +71,12 @@ updatedDistributorAccount.balances.forEach((balance) => {
 "https://api.testnet.minepi.com/assets?asset_code=<8coin>&asset_issuer=<8coin>"
 ...
 "_links": {
-  "toml": {
+  "toml": {[[CURRENCIES]]
+code="8coin"
+issuer="GANRXB35VL4GIROIAFYEZMUNG45JT6BS7Z35LGDMY62X5ZJCEVSID5QJ"
+name="number 8"
+desc="This is a test token that is created as an example and has no value."
+image="https://share.google/LdZM6gaTczRyqNE6f"
     "href": "https://<number8>/.well-known/pi.toml"
   }
 }
@@ -94,9 +96,4 @@ setOptionsTransaction.sign(issuerKeypair);
 await server.submitTransaction(setOptionsTransaction);
 console.log("Home Domain is set successfully.");
 
-[[CURRENCIES]]
-code="8coin"
-issuer="GANRXB35VL4GIROIAFYEZMUNG45JT6BS7Z35LGDMY62X5ZJCEVSID5QJ"
-name="number 8"
-desc="This is a test token that is created as an example and has no value."
-image="https://share.google/LdZM6gaTczRyqNE6f"
+
