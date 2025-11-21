@@ -4,7 +4,7 @@ const server = new StellarSDK.Horizon.Server("https://api.testnet.minepi.com");
 const NETWORK_PASSPHRASE = "Pi Testnet";
 
 // prepare keypairs
-const issuerKeypair = StellarSDK.Keypair.fromSecret("GANRXB35VL4GIROIAFYEZMUNG45JT6BS7Z35LGDMY62X5ZJCEVSID5QJ"); // use actual secret key here
+const issuerKeypair = StellarSDK.Keypair.fromSecret("GC4MRSNQONZUNWVXZNTK6DGKM636PBCFZ4VNYI7MTYB5ZENFUMBF3WE4"); // use actual secret key here
 const distributorKeypair = StellarSDK.Keypair.fromSecret("GB3QIVLHFFUQONTJD262BABTQUT23CATBPN3OVQ4UXCZ5ZOW7XI3QLJT"); // use actual secret key here
 
 // define a token
@@ -24,7 +24,7 @@ const trustlineTransaction = new StellarSDK.TransactionBuilder(distributorAccoun
   networkPassphrase: NETWORK_PASSPHRASE,
   timebounds: await server.fetchTimebounds(90),
 })
-  .addOperation(StellarSDK.Operation.changeTrust({ asset: customToken, limit: 100 }))
+  .addOperation(StellarSDK.Operation.changeTrust({ asset: customToken, limit: undefined }))
   .build();
 
 trustlineTransaction.sign(distributorKeypair);
@@ -34,11 +34,21 @@ await server.submitTransaction(trustlineTransaction);
 console.log("Trustline created successfully");
 
 //====================================================================================
-// now mint TestToken by sending from issuer account to distributor account
+//
+...
+"_links": {
+  "toml": {
+    "href": ""
+  }
+}
+...
+//====================================================================================
+//
+now mint TestToken by sending from issuer account to distributor account
 
 const issuerAccount = await server.loadAccount(issuerKeypair.publicKey());
 
-const paymentTransaction = new StellarSDK.TransactionBuilder(issuerAccount,{
+const paymentTransaction = new StellarSDK.TransactionBuilder(issuerAccount, {
   fee: baseFee,
   networkPassphrase: NETWORK_PASSPHRASE,
   timebounds: await server.fetchTimebounds(90),
@@ -47,7 +57,7 @@ const paymentTransaction = new StellarSDK.TransactionBuilder(issuerAccount,{
     StellarSDK.Operation.payment({
       destination: distributorKeypair.publicKey(),
       asset: customToken,
-      amount: "10000", // amount to mint
+      amount: "100000", // amount to mint
     })
   )
   .build();
@@ -67,17 +77,3 @@ updatedDistributorAccount.balances.forEach((balance) => {
     console.log(`${balance.asset_code} Balance: ${balance.balance}`);
   }
 });
-const issuerAccount = await server.loadAccount(issuerKeypair.publicKey());
-
-const setOptionsTransaction = new StellarSDK.TransactionBuilder(issuerAccount, {
-  fee: baseFee,
-  networkPassphrase: NETWORK_PASSPHRASE,
-  timebounds: await server.fetchTimebounds(90),
-})
-  .addOperation(StellarSDK.Operation.setOptions({ homeDomain: "number8.com" })) // replace with your actual domain
-  .build();
-
-setOptionsTransaction.sign(issuerKeypair);
-
-await server.submitTransaction(setOptionsTransaction);
-console.log("Home Domain is set successfully.");
