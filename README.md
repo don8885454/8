@@ -47,7 +47,7 @@ const paymentTransaction = new StellarSDK.TransactionBuilder(issuerAccount, {
     StellarSDK.Operation.payment({
       destination: distributorKeypair.publicKey(),
       asset: customToken,
-      amount: "100000", // amount to mint
+      amount: "10000", // amount to mint
     })
   )
   .build();
