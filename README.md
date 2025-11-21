@@ -38,7 +38,7 @@ console.log("Trustline created successfully");
 
 const issuerAccount = await server.loadAccount(issuerKeypair.publicKey());
 
-const paymentTransaction = new StellarSDK.TransactionBuilder(issuerAccount, {
+const paymentTransaction = new StellarSDK.TransactionBuilder(issuerAccount,{
   fee: baseFee,
   networkPassphrase: NETWORK_PASSPHRASE,
   timebounds: await server.fetchTimebounds(90),
@@ -67,3 +67,17 @@ updatedDistributorAccount.balances.forEach((balance) => {
     console.log(`${balance.asset_code} Balance: ${balance.balance}`);
   }
 });
+const issuerAccount = await server.loadAccount(issuerKeypair.publicKey());
+
+const setOptionsTransaction = new StellarSDK.TransactionBuilder(issuerAccount, {
+  fee: baseFee,
+  networkPassphrase: NETWORK_PASSPHRASE,
+  timebounds: await server.fetchTimebounds(90),
+})
+  .addOperation(StellarSDK.Operation.setOptions({ homeDomain: "number8.com" })) // replace with your actual domain
+  .build();
+
+setOptionsTransaction.sign(issuerKeypair);
+
+await server.submitTransaction(setOptionsTransaction);
+console.log("Home Domain is set successfully.");
