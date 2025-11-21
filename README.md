@@ -38,7 +38,7 @@ console.log("Trustline created successfully");
 ...
 "_links": {
   "toml": {
-    "href": "https://<number8>/.well-known/pi.toml"
+    "href": "https://api.testnet.minepi.com/assets?asset_code=<GabtToken>&asset_issuer=<GC4MRSNQONZUNWVXZNTK6DGKM636PBCFZ4VNYI7MTYB5ZENFUMBF3WE4>"
   }
 }
 ...
