@@ -1,7 +1,7 @@
 const StellarSDK = require("@stellar/stellar-sdk");
 
 const server = new StellarSDK.Horizon.Server("https://api.testnet.minepi.com");
-const NETWORK_PASSPHRASE = "lyrics enact thrive risk dry soccer material universe tiger square weapon love review float garbage disease measure skull weapon surround oblige unable artefact grit";
+const NETWORK_PASSPHRASE = "Pi Testnet";
 
 // prepare keypairs
 const issuerKeypair = StellarSDK.Keypair.fromSecret("GANRXB35VL4GIROIAFYEZMUNG45JT6BS7Z35LGDMY62X5ZJCEVSID5QJ"); // use actual secret key here
@@ -9,7 +9,7 @@ const distributorKeypair = StellarSDK.Keypair.fromSecret("GB3QIVLHFFUQONTJD262BA
 
 // define a token
 // token code should be alphanumeric and up to 12 characters, case sensitive
-const customToken = new StellarSDK.Asset("8Coinn", issuerKeypair.publicKey());
+const customToken = new StellarSDK.Asset("GabtToken", issuerKeypair.publicKey());
 
 const distributorAccount = await server.loadAccount(distributorKeypair.publicKey());
 
@@ -24,7 +24,7 @@ const trustlineTransaction = new StellarSDK.TransactionBuilder(distributorAccoun
   networkPassphrase: NETWORK_PASSPHRASE,
   timebounds: await server.fetchTimebounds(90),
 })
-  .addOperation(StellarSDK.Operation.changeTrust({ asset: custom token, limit: undefined }))
+  .addOperation(StellarSDK.Operation.changeTrust({ asset: customToken, limit: 100 }))
   .build();
 
 trustlineTransaction.sign(distributorKeypair);
@@ -36,7 +36,7 @@ console.log("Trustline created successfully");
 //====================================================================================
 // now mint TestToken by sending from issuer account to distributor account
 
-const issuerAccount = await server.loadAccount(issuerKeypair.publicKey(GANRXB35VL4GIROIAFYEZMUNG45JT6BS7Z35LGDMY62X5ZJCEVSID5QJ));
+const issuerAccount = await server.loadAccount(issuerKeypair.publicKey());
 
 const paymentTransaction = new StellarSDK.TransactionBuilder(issuerAccount, {
   fee: baseFee,
@@ -46,8 +46,8 @@ const paymentTransaction = new StellarSDK.TransactionBuilder(issuerAccount, {
   .addOperation(
     StellarSDK.Operation.payment({
       destination: distributorKeypair.publicKey(),
-      asset: 8coin,
-      amount: "10000", // amount to mint
+      asset: customToken,
+      amount: "100000", // amount to mint
     })
   )
   .build();
@@ -67,33 +67,3 @@ updatedDistributorAccount.balances.forEach((balance) => {
     console.log(`${balance.asset_code} Balance: ${balance.balance}`);
   }
 });
-
-"https://api.testnet.minepi.com/assets?asset_code=<8coin>&asset_issuer=<8coin>"
-...
-"_links": {
-  "toml": {[[CURRENCIES]]
-code="8coin"
-issuer="GANRXB35VL4GIROIAFYEZMUNG45JT6BS7Z35LGDMY62X5ZJCEVSID5QJ"
-name="number 8"
-desc="This is a test token that is created as an example and has no value."
-image="https://share.google/LdZM6gaTczRyqNE6f"
-    "href": "https://<number8>/.well-known/pi.toml"
-  }
-}
-...
-const issuerAccount = await server.loadAccount(issuerKeypair.publicKey(GB3QIVLHFFUQONTJD262BABTQUT23CATBPN3OVQ4UXCZ5ZOW7XI3QLJT));
-
-const setOptionsTransaction = new StellarSDK.TransactionBuilder(issuerAccount, {
-  fee: baseFee,
-  networkPassphrase: NETWORK_PASSPHRASE,
-  timebounds: await server.fetchTimebounds(90),
-})
-  .addOperation(StellarSDK.Operation.setOptions({ homeDomain: "number8.com" })) // replace with your actual domain
-  .build();
-
-setOptionsTransaction.sign(issuerKeypair);
-
-await server.submitTransaction(setOptionsTransaction);
-console.log("Home Domain is set successfully.");
-
-
